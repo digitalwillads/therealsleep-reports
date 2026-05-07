@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>theREALsleep — Patient Workflow (Current State)</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", system-ui, sans-serif;
+    color: #0f172a;
+    background: #f8fafc;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============ HEADER ============ */
+  header.page {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: white;
+    padding: 56px 48px 48px;
+  }
+  header.page .container { max-width: 1300px; margin: 0 auto; }
+  header.page .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 12px;
+    color: #94a3b8;
+    margin: 0 0 12px;
+    font-weight: 600;
+  }
+  header.page h1 {
+    font-size: 44px;
+    margin: 0 0 12px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  header.page p.lede {
+    font-size: 19px;
+    color: #cbd5e1;
+    max-width: 800px;
+    margin: 0 0 28px;
+  }
+  header.page .meta {
+    display: flex; flex-wrap: wrap; gap: 24px;
+    color: #94a3b8;
+    font-size: 14px;
+  }
+  header.page .meta b { color: #e2e8f0; font-weight: 600; }
+
+  /* ============ LEGEND (sticky) ============ */
+  .legend {
+    position: sticky;
+    top: 0;
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 16px 48px;
+    z-index: 50;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .legend .container {
+    max-width: 1300px; margin: 0 auto;
+    display: flex; flex-wrap: wrap; gap: 24px; align-items: center;
+  }
+  .legend .label {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #64748b;
+  }
+  .legend .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 500;
+    padding: 5px 12px; border-radius: 999px;
+  }
+  .legend .swatch { width: 10px; height: 10px; border-radius: 50%; }
+  .pill.auto   { background: #dcfce7; color: #14532d; }
+  .pill.auto   .swatch { background: #16a34a; }
+  .pill.manual { background: #ffedd5; color: #7c2d12; }
+  .pill.manual .swatch { background: #ea580c; }
+  .pill.gap    { background: #fee2e2; color: #7f1d1d; }
+  .pill.gap    .swatch { background: #dc2626; }
+  .pill.new    { background: #dbeafe; color: #1e3a8a; }
+  .pill.new    .swatch { background: #2563eb; }
+
+  /* ============ TLDR ============ */
+  .tldr {
+    max-width: 1300px;
+    margin: 48px auto 0;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .tldr .card {
+    background: white;
+    border-radius: 14px;
+    padding: 24px 28px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .tldr .card h3 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #64748b;
+    font-weight: 600;
+  }
+  .tldr .stat {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    letter-spacing: -0.02em;
+  }
+  .tldr .card.live   .stat { color: #16a34a; }
+  .tldr .card.manual .stat { color: #ea580c; }
+  .tldr .card.gaps   .stat { color: #dc2626; }
+  .tldr .card .desc { font-size: 14px; color: #475569; margin: 0; }
+
+  /* ============ STAGE ============ */
+  main { max-width: 1300px; margin: 0 auto; padding: 48px; }
+  .stage {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .stage-head {
+    display: flex; align-items: baseline; gap: 16px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+  }
+  .stage-num {
+    font-size: 14px;
+    font-weight: 700;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+  }
+  .stage-title { font-size: 22px; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+  .stage-sub { font-size: 14px; color: #64748b; margin-left: auto; }
+
+  /* steps grid */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .step {
+    border-left: 4px solid;
+    padding: 14px 16px;
+    border-radius: 6px;
+    background: #fbfbfd;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .step .badge {
+    display: inline-block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .step .title { font-weight: 600; color: #0f172a; margin-bottom: 4px; font-size: 14.5px; }
+  .step .desc { color: #475569; font-size: 13.5px; }
+  .step.auto   { border-left-color: #16a34a; background: #f0fdf4; }
+  .step.auto   .badge { background: #dcfce7; color: #14532d; }
+  .step.manual { border-left-color: #ea580c; background: #fff7ed; }
+  .step.manual .badge { background: #ffedd5; color: #7c2d12; }
+  .step.gap    { border-left-color: #dc2626; background: #fef2f2; }
+  .step.gap    .badge { background: #fee2e2; color: #7f1d1d; }
+  .step.new    { border-left-color: #2563eb; background: #eff6ff; }
+  .step.new    .badge { background: #dbeafe; color: #1e3a8a; }
+
+  /* gaps callouts */
+  .gaps-section {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .gaps-section h2 { color: #7f1d1d; margin: 0 0 8px; font-size: 22px; letter-spacing: -0.01em; }
+  .gaps-section p.sub { color: #991b1b; margin: 0 0 20px; font-size: 14.5px; }
+  .gaps-list { display: grid; gap: 12px; }
+  .gap-item {
+    background: white;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: grid; grid-template-columns: 32px 1fr; gap: 12px;
+    align-items: start;
+  }
+  .gap-item .num {
+    background: #dc2626; color: white;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .gap-item h4 { margin: 0 0 4px; font-size: 15.5px; color: #0f172a; }
+  .gap-item p  { margin: 0; font-size: 14px; color: #475569; }
+
+  /* ask section */
+  .ask {
+    background: #f1f5f9;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .ask h2 { margin: 0 0 8px; font-size: 22px; letter-spacing: -0.01em; }
+  .ask .sub { color: #475569; margin: 0 0 18px; font-size: 14.5px; }
+  .ask ol { margin: 0; padding-left: 22px; }
+  .ask li { margin-bottom: 10px; font-size: 15px; }
+  .ask li::marker { color: #64748b; font-weight: 700; }
+
+  /* footer */
+  footer {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 13px;
+    padding: 32px 48px 64px;
+  }
+  footer code {
+    background: #e2e8f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #334155;
+    font-size: 12px;
+  }
+
+  /* ============ Print ============ */
+  @media print {
+    body { background: white; }
+    .legend { position: static; box-shadow: none; }
+    .stage, .gaps-section, .ask, .tldr .card { break-inside: avoid; box-shadow: none; }
+    header.page { padding: 32px; }
+  }
+
+  /* ============ Mobile ============ */
+  @media (max-width: 800px) {
+    header.page { padding: 32px 20px; }
+    header.page h1 { font-size: 30px; }
+    .legend { padding: 12px 20px; }
+    .tldr { grid-template-columns: 1fr; padding: 0 20px; }
+    main { padding: 24px 20px; }
+    .stage { padding: 20px; }
+    .stage-head { flex-wrap: wrap; }
+    .stage-sub { margin-left: 0; width: 100%; }
+    .gaps-section, .ask { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="page">
+  <div class="container">
+    <p class="eyebrow">For Jessica Senser · theREALsleep</p>
+    <h1>Patient Workflow — Current State</h1>
+    <p class="lede">
+      Every step of the patient journey, from landing on the website
+      through getting their oral appliance fitted and delivered. Each
+      step labeled by who runs it today — system, staff, gap, or
+      something we're building right now. The point is to make every
+      manual handoff visible so we can decide what to automate next.
+    </p>
+    <div class="meta">
+      <span><b>Date:</b> 2026-05-06</span>
+      <span><b>Author:</b> Will Arnett · Digital Will Ads</span>
+      <span><b>Audience:</b> Jessica — for redline + feedback</span>
+    </div>
+  </div>
+</header>
+
+<div class="legend">
+  <div class="container">
+    <span class="label">Legend</span>
+    <span class="pill auto"><span class="swatch"></span>Automated today</span>
+    <span class="pill manual"><span class="swatch"></span>Manual / staff</span>
+    <span class="pill new"><span class="swatch"></span>Being built now</span>
+    <span class="pill gap"><span class="swatch"></span>Gap — no process</span>
+  </div>
+</div>
+
+<section class="tldr">
+  <div class="card live">
+    <h3>What's working today</h3>
+    <p class="stat">5</p>
+    <p class="desc">Email sequences live in Dittofeed (Assessment → Purchase → Test → Consult → Appliance → Ongoing). Real patients getting Sequence 1 + 2 emails in the last 24 hours.</p>
+  </div>
+  <div class="card manual">
+    <h3>Manual choke points</h3>
+    <p class="stat">~15</p>
+    <p class="desc">Steps requiring Jessica or staff to act — calling patients, setting tags, ordering kits, scheduling appointments, managing the lab order.</p>
+  </div>
+  <div class="card gaps">
+    <h3>True gaps</h3>
+    <p class="stat">5</p>
+    <p class="desc">Places with no automation AND no defined process — patients can fall through the cracks.</p>
+  </div>
+</section>
+
+<main>
+
+  <!-- STAGE 1 -->
+  <section class="stage">
+    <div class="stage-head">
+      <span class="stage-num">STAGE 1</span>
+      <h2 class="stage-title">Discovery &amp; Assessment</h2>
+      <span class="stage-sub">Visitor → assessment submitted → into Dittofeed</span>
+    </div>
+    <div class="steps">
+      <div class="step auto">
+        <span class="badge">AUTO</span>
+        <div class="title">Visitor lands on therealsleep.com</div>
+        <div class="desc">From Google, Meta, direct, or a referral.</div>
+      </div>
+      <div class="step auto">
+        <span class="badge">AUTO</span>
+        <div class="title">Drip pixel loads</div>
+        <div class="desc">Account 2953426 — sitewide tag, anonymous tracking.</div>
+      </div>
+      <div class="step auto">
+        <span class="badge">AUTO</span>
+        <div class="title">Visitor fills sleep assessment</div>
+        <div class="desc">Native /sleep-assessment form, 8 symptom questions + contact.</div>
+      </div>
+      <div class="step auto">
+        <span class="badge">AUTO</span>
+        <div class="title">Form posts to Drip</div>
+        <div class="desc">Identify + tag <code>assessment-completed</code>; symptom answers stored as custom fields.</div>
+      </div>
+      <div class="step auto">
+        <span class="badge">AUTO</span>
+        <div class="title">On-page thank-you panel</div>
+        <div class="desc">Patient sees confirmation immediately.</div>
+      </div>
+      <div class="step auto">
+        <span class="badge">AUTO</span>
+        <div class="title">Subscriber synced into Dittofeed</div>
+        <div class="desc">Triggers Sequence 1.</div>
+      </div>
+      <div class="step auto">
+        <span class="badge">AUTO · LIVE</span>
+        <div class="title">Dittofeed Sequence 1 — Assessment → Purchase</div>
+        <div class="desc">Nurture email series. Real patients receiving these today.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 2 -->
+  <section class="stage">
+    <div class="stage-head">
+      <span class="stage-num">STAGE 2</span>
+      <h2 class="stage-title">Sleep Test Purchase</h2>
+      <span class="stage-sub">Visitor buys the at-home test</span>
+    </div>
+    <div class="steps">
+      <div class="step auto">
+        <span class="badge">AUTO</span>
+        <div class="title">Visits /shop or /at-home-sleep-test</div>
+        <div class="desc">Product page with $160 price.</div>
+      </div>
+      <div class="step auto">
+        <span class="badge">AUTO</span>
+        <div class="title">Clicks Buy Now / Order Now</div>
+      </div>
+      <div class="step new">
+        <span class="badge">NEW</span>
+        <div class="title">Stripe checkout (being wired up tonight)</div>
+        <div class="desc">Charges <b>theREALsleep's</b> Stripe account (verified). Replaces the legacy Shopify path. Placeholder anchor on /shop until the cart deploys.</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Phone / Shopify orders</div>
+        <div class="desc">Until the new Stripe cart is live, orders still come in by phone or via legacy Shopify (<code>shopify-import</code> tag in Drip).</div>
+      </div>
+      <div class="step auto">
+        <span class="badge">AUTO</span>
+        <div class="title">Tag sleep-test-purchased</div>
+        <div class="desc">Either Stripe webhook (new path) or manual entry (legacy) sets this tag in Drip → flows to Dittofeed.</div>
+      </div>
+      <div class="step auto">
+        <span class="badge">AUTO · LIVE</span>
+        <div class="title">Dittofeed Sequence 2 — Purchase → Complete Sleep Test</div>
+        <div class="desc">Order confirmation + how-to-use the test. Sending today.</div>
+      </div>
+      <div class="step new">
+        <span class="badge">NEW</span>
+        <div class="title">Delivery / setup video email</div>
+        <div class="desc">Being built tonight. Walks the patient through using the NightOwl device.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 3 -->
+  <section class="stage">
+    <div class="stage-head">
+      <span class="stage-num">STAGE 3</span>
+      <h2 class="stage-title">Test Fulfillment &amp; At-Home Testing</h2>
+      <span class="stage-sub">Most physical handling lives here</span>
+    </div>
+    <div class="steps">
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Order NightOwl device from supplier</div>
+        <div class="desc">Manual order placed by clinic.</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Ship kit to patient</div>
+        <div class="desc">Pack + ship from clinic. EasyPost shipping label generation is wired into the new checkout worker.</div>
+      </div>
+      <div class="step gap">
+        <span class="badge">GAP</span>
+        <div class="title">Shipping tracking email</div>
+        <div class="desc">Patient gets nothing automated after purchase. They wait. They call. We answer.</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">PHYSICAL</span>
+        <div class="title">Patient receives kit</div>
+      </div>
+      <div class="step auto">
+        <span class="badge">AUTO</span>
+        <div class="title">Patient watches setup video</div>
+        <div class="desc">Linked from delivery email (being built).</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">PHYSICAL</span>
+        <div class="title">Patient wears NightOwl 2 nights</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">PHYSICAL</span>
+        <div class="title">Patient ships kit back</div>
+        <div class="desc">Prepaid label?</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">EXTERNAL</span>
+        <div class="title">Results processed</div>
+        <div class="desc">NightOwl portal + sleep physician review (vendor-side).</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Results arrive at clinic</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL · CRITICAL</span>
+        <div class="title">Set tag test-completed</div>
+        <div class="desc">Triggers Sequence 3. If staff forgets to set this tag, the patient sits in limbo and Sequence 3 never fires.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 4 -->
+  <section class="stage">
+    <div class="stage-head">
+      <span class="stage-num">STAGE 4</span>
+      <h2 class="stage-title">Book Consultation with Doctor</h2>
+      <span class="stage-sub">The biggest gap Jessica called out</span>
+    </div>
+    <div class="steps">
+      <div class="step auto">
+        <span class="badge">AUTO · LIVE</span>
+        <div class="title">Dittofeed Sequence 3 — Test Complete → Book Consult</div>
+        <div class="desc">"Time to book your consultation" email goes out automatically.</div>
+      </div>
+      <div class="step gap">
+        <span class="badge">GAP</span>
+        <div class="title">Patient self-booking</div>
+        <div class="desc">No link in the email lets the patient book themselves. Sequence 3 sends them, but the actual booking is still a phone call. <b>This is the piece you flagged in the meeting.</b></div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Front desk calls patient</div>
+        <div class="desc">Jessica or staff phones to schedule.</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Appointment booked in scheduling system</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Set tag consultation-booked</div>
+      </div>
+      <div class="step gap">
+        <span class="badge">GAP</span>
+        <div class="title">Confirmation + reminder emails</div>
+        <div class="desc">No automated reminders before the consult — driving up no-show risk.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 5 -->
+  <section class="stage">
+    <div class="stage-head">
+      <span class="stage-num">STAGE 5</span>
+      <h2 class="stage-title">Consult, Prescription &amp; Appliance Order</h2>
+      <span class="stage-sub">Almost entirely manual</span>
+    </div>
+    <div class="steps">
+      <div class="step manual">
+        <span class="badge">PHYSICAL</span>
+        <div class="title">Consultation appointment</div>
+        <div class="desc">In-person or virtual.</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Set tag consultation-complete</div>
+        <div class="desc">Triggers Sequence 4.</div>
+      </div>
+      <div class="step auto">
+        <span class="badge">AUTO · LIVE</span>
+        <div class="title">Dittofeed Sequence 4 — Post-Consult → Oral Appliance</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Doctor writes prescription</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Take dental impressions / scans</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Submit appliance order to lab</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Set tag appliance-purchased</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">EXTERNAL</span>
+        <div class="title">Lab fabricates appliance</div>
+        <div class="desc">1–3 week turnaround.</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Appliance arrives at clinic</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 6 -->
+  <section class="stage">
+    <div class="stage-head">
+      <span class="stage-num">STAGE 6</span>
+      <h2 class="stage-title">Delivery &amp; Ongoing Care</h2>
+      <span class="stage-sub">Fitting → follow-ups → reviews</span>
+    </div>
+    <div class="steps">
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Schedule fitting appointment</div>
+        <div class="desc">Phone call to patient.</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">PHYSICAL</span>
+        <div class="title">Patient comes in for fitting</div>
+        <div class="desc">In-clinic fitting + adjustment instructions.</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Set tag appliance-delivered</div>
+        <div class="desc">Triggers Sequence 5.</div>
+      </div>
+      <div class="step auto">
+        <span class="badge">AUTO · LIVE</span>
+        <div class="title">Dittofeed Sequence 5 — Post-Delivery → Ongoing Care</div>
+        <div class="desc">Care tips, check-ins.</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Follow-up appointments 30 / 90 / 180 days</div>
+      </div>
+      <div class="step gap">
+        <span class="badge">GAP</span>
+        <div class="title">Google review request</div>
+        <div class="desc">Sequence 5 may include this — needs verification. Otherwise, leaving reviews on the table.</div>
+      </div>
+      <div class="step manual">
+        <span class="badge">MANUAL</span>
+        <div class="title">Insurance billing &amp; reimbursement</div>
+        <div class="desc">Entirely paper / phone today.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BIG GAPS -->
+  <section class="gaps-section">
+    <h2>The biggest gaps to fix first</h2>
+    <p class="sub">Ranked by patient impact + how often they bite us.</p>
+    <div class="gaps-list">
+      <div class="gap-item">
+        <span class="num">1</span>
+        <div>
+          <h4>Patient self-booking after the sleep test</h4>
+          <p>Sequence 3 sends "time to book" but the booking is a phone call. Drop a real scheduling link (Calendly, Acuity, NexHealth) into Sequence 3 and the bottleneck disappears.</p>
+        </div>
+      </div>
+      <div class="gap-item">
+        <span class="num">2</span>
+        <div>
+          <h4>Tag-setting depends on staff remembering</h4>
+          <p>The whole chain breaks if nobody manually sets <code>test-completed</code>, <code>consultation-complete</code>, <code>appliance-purchased</code>, <code>appliance-delivered</code>. Each missed tag = a sequence that never fires.</p>
+        </div>
+      </div>
+      <div class="gap-item">
+        <span class="num">3</span>
+        <div>
+          <h4>Shipping notifications</h4>
+          <p>From "kit ordered" to "kit arrived" the patient gets nothing. Two automated emails (label-printed + tracking-update) would kill a lot of "where's my test?" calls.</p>
+        </div>
+      </div>
+      <div class="gap-item">
+        <span class="num">4</span>
+        <div>
+          <h4>Appointment confirmations &amp; reminders</h4>
+          <p>Once a consult is on the calendar, no reminder emails or texts go out. Adds avoidable no-shows.</p>
+        </div>
+      </div>
+      <div class="gap-item">
+        <span class="num">5</span>
+        <div>
+          <h4>Google review request after delivery</h4>
+          <p>Need to confirm Sequence 5 actually asks for one. If not, it's the easiest layup in this whole document.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASK -->
+  <section class="ask">
+    <h2>What I need from you, Jessica</h2>
+    <p class="sub">Three things, in order of usefulness:</p>
+    <ol>
+      <li><b>Mark up everything I missed.</b> I documented what I can see in the system. Plenty of work lives in your head, in spreadsheets, or in phone calls I can't see. Reply with corrections, additions, or "this is wrong because…"</li>
+      <li><b>Tell me your top 3 frustrations.</b> If I could automate one thing tomorrow, what would save you the most pain?</li>
+      <li><b>Confirm the post-test side.</b> Stages 3–6 are mostly inferred from process knowledge, not direct observation. Especially: how do test results actually reach the clinic? Who sets the <code>test-completed</code> tag today?</li>
+    </ol>
+  </section>
+
+</main>
+
+<footer>
+  Source files: <code>docs/patient-workflow.md</code> · <code>docs/patient-workflow.html</code> · <code>docs/screenshots/</code>
+  <br><br>
+  Generated 2026-05-06 from a live walkthrough of Drip + Dittofeed admin.
+</footer>
+
+</body>
+</html>
