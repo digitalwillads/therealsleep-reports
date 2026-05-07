@@ -1,0 +1,1129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sleep Assessment Report — theREALsleep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf9f7;
+    --bg-2: #f4f2ee;
+    --ink: #1a1a17;
+    --ink-2: #2d2c28;
+    --muted: #78756d;
+    --muted-2: #a8a499;
+    --line: #e6e3dc;
+    --line-2: #efece5;
+    --accent: #1f5e44;
+    --accent-soft: #e7efe9;
+    --accent-ink: #133b2c;
+    --gold: #b08114;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .page { max-width: 1080px; margin: 0 auto; padding: 56px 40px 80px; }
+  @media (max-width: 720px) {
+    .page { padding: 32px 20px 56px; }
+  }
+
+  /* ============ MASTHEAD ============ */
+  .masthead {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-bottom: 18px; border-bottom: 1px solid var(--line);
+    margin-bottom: 56px;
+  }
+  .brand {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .brand-mark {
+    display: inline-block; width: 7px; height: 7px;
+    border-radius: 999px; background: var(--accent);
+    margin-right: 8px; transform: translateY(-3px);
+  }
+  .masthead .meta {
+    font-size: 12px; color: var(--muted);
+    letter-spacing: .1em; text-transform: uppercase;
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 64px;
+    align-items: end;
+    padding: 24px 0 64px;
+  }
+  @media (max-width: 720px) {
+    .hero { grid-template-columns: 1fr; gap: 32px; padding: 16px 0 40px; }
+  }
+  .hero-num {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-size: clamp(140px, 22vw, 240px);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    margin: 0;
+    font-weight: 400;
+  }
+  .hero-num .small-caret {
+    display: inline-block;
+    font-size: 0.18em;
+    vertical-align: super;
+    color: var(--accent);
+    font-style: normal;
+    margin-left: 8px;
+    letter-spacing: 0;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    margin: 0 0 8px;
+    font-weight: 500;
+  }
+  .hero-h1 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 0 0 18px;
+    color: var(--ink);
+  }
+  .hero-h1 em { font-style: italic; color: var(--accent); }
+  .hero-lede {
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 38ch;
+    margin: 0;
+  }
+
+  /* ============ STAT TRIO (no boxes) ============ */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin: 0 0 80px;
+  }
+  @media (max-width: 720px) {
+    .stats { grid-template-columns: 1fr; }
+    .stats > div { border-right: 0 !important; border-bottom: 1px solid var(--line); }
+    .stats > div:last-child { border-bottom: 0; }
+  }
+  .stats > div {
+    padding: 26px 28px;
+    border-right: 1px solid var(--line);
+  }
+  .stats > div:last-child { border-right: 0; }
+  .stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-weight: 500;
+    margin: 0 0 12px;
+  }
+  .stat-value {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 56px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin: 0;
+  }
+  .stat-value .unit {
+    font-size: 22px;
+    color: var(--muted);
+    margin-left: 4px;
+    font-style: italic;
+  }
+  .stat-aside {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    letter-spacing: 0.02em;
+  }
+
+  /* ============ SECTIONS ============ */
+  section { margin: 0 0 88px; }
+  .section-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 14px;
+    margin-bottom: 32px;
+  }
+  .section-eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .section-h2 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 28px;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  /* ============ CHART ============ */
+  .chart-wrap { padding: 8px 0 0; }
+  .chart {
+    display: flex; align-items: flex-end; gap: 6px;
+    height: 220px; padding: 36px 0 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .chart .bar {
+    flex: 1;
+    background: var(--accent-soft);
+    height: var(--h, 0%);
+    min-height: 2px;
+    border-radius: 2px 2px 0 0;
+    position: relative;
+    transition: opacity .2s;
+  }
+  .chart .bar.zero {
+    background: var(--line);
+    height: 2px !important;
+    min-height: 2px;
+    border-radius: 0;
+  }
+  .chart .bar.peak { background: var(--accent); }
+  .chart .peak-label {
+    position: absolute;
+    bottom: calc(100% + 8px); left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--accent-ink);
+    line-height: 1;
+  }
+  .chart-axis {
+    display: flex; gap: 6px; margin-top: 10px;
+  }
+  .chart-axis .tick {
+    flex: 1;
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 10px;
+    color: var(--muted-2);
+    text-align: center;
+    letter-spacing: 0;
+  }
+  .chart-axis .tick:not(.tick-show) { color: transparent; }
+  .chart-caption {
+    margin-top: 24px;
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 60ch;
+    line-height: 1.6;
+  }
+  .chart-caption b { color: var(--ink-2); font-weight: 500; }
+
+  /* ============ TWO COLUMN ============ */
+  .twocol {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+  }
+  @media (max-width: 720px) {
+    .twocol { grid-template-columns: 1fr; gap: 40px; }
+  }
+  .col-h3 {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 18px;
+    letter-spacing: -0.01em;
+  }
+  .col-h3 .col-sub { color: var(--muted); font-weight: 400; margin-left: 6px; }
+
+  ul.hbars { list-style: none; padding: 0; margin: 0; }
+  li.hbar {
+    display: grid;
+    grid-template-columns: 1fr 100px 32px;
+    align-items: center;
+    gap: 14px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--line-2);
+    font-size: 14px;
+  }
+  li.hbar:last-child { border-bottom: 0; }
+  .hbar-label { color: var(--ink-2); }
+  .hbar-track {
+    height: 4px;
+    background: var(--line);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .hbar-fill {
+    display: block; height: 100%;
+    background: var(--accent);
+    border-radius: 999px;
+  }
+  .hbar-num {
+    text-align: right;
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  /* ============ CONVERTED HIGHLIGHT ============ */
+  .converted-block {
+    background: linear-gradient(180deg, var(--accent-soft) 0%, transparent 100%);
+    border-top: 1px solid var(--accent);
+    padding: 32px 32px 8px;
+    border-radius: 2px 2px 0 0;
+    margin-top: 8px;
+  }
+  .converted-headline {
+    display: flex; align-items: baseline; gap: 18px;
+    margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .converted-num {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--accent-ink);
+    letter-spacing: -0.02em;
+  }
+  .converted-rev {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-size: 24px;
+    color: var(--ink-2);
+    letter-spacing: -0.01em;
+  }
+  .converted-rev b { color: var(--accent-ink); font-weight: 400; }
+  .converted-rate {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-family: 'Geist Mono', ui-monospace, monospace;
+  }
+  ul.conv-list {
+    list-style: none; padding: 0; margin: 0 -32px -32px;
+    border-top: 1px solid var(--line-2);
+  }
+  li.conv-item {
+    display: grid;
+    grid-template-columns: 130px 1fr 90px;
+    gap: 16px;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--line-2);
+    align-items: baseline;
+  }
+  li.conv-item:last-child { border-bottom: 0; }
+  .conv-date {
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 12px; color: var(--muted);
+  }
+  .conv-name {
+    font-size: 15px; color: var(--ink);
+  }
+  .conv-name .conv-email {
+    color: var(--muted); font-size: 12px;
+    display: block; margin-top: 2px;
+    font-family: 'Geist Mono', ui-monospace, monospace;
+  }
+  .conv-amt {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--accent-ink);
+    text-align: right;
+  }
+
+  .caveat {
+    margin-top: 18px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    padding-left: 16px;
+    border-left: 2px solid var(--line);
+    max-width: 70ch;
+  }
+
+  /* ============ TABLE ============ */
+  details.full-list { margin-top: 56px; }
+  details.full-list > summary {
+    list-style: none;
+    cursor: pointer;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    padding: 16px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center;
+    user-select: none;
+  }
+  details.full-list > summary::-webkit-details-marker { display: none; }
+  details.full-list > summary::after { content: "+ Show all 77"; font-family: 'Geist Mono', ui-monospace, monospace; }
+  details.full-list[open] > summary::after { content: "− Hide list"; }
+
+  table.subs {
+    width: 100%; border-collapse: collapse; margin-top: 24px;
+    font-size: 13px;
+  }
+  table.subs th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-weight: 500;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  table.subs td {
+    padding: 12px;
+    border-bottom: 1px solid var(--line-2);
+    color: var(--ink-2);
+    vertical-align: top;
+  }
+  table.subs tr.internal-row td { color: var(--muted-2); }
+  .date-col { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px; white-space: nowrap; color: var(--muted) !important; }
+  .email-col { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px; color: var(--muted) !important; max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .src-col { color: var(--muted) !important; }
+  .conv-col { text-align: right; white-space: nowrap; }
+
+  .chip {
+    display: inline-block;
+    padding: 2px 9px;
+    background: var(--accent);
+    color: white;
+    border-radius: 999px;
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0;
+  }
+  .chip.muted {
+    background: transparent;
+    color: var(--muted-2);
+    border: 1px solid var(--line);
+  }
+
+  /* ============ FOOTER ============ */
+  footer.report-foot {
+    margin-top: 96px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  footer.report-foot p { margin: 0 0 8px; max-width: 75ch; }
+  footer.report-foot strong { color: var(--ink-2); font-weight: 500; }
+  footer .signoff {
+    margin-top: 28px;
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--ink-2);
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="brand"><span class="brand-mark"></span>theREALsleep</div>
+    <div class="meta">Assessment Report · May 7, 2026</div>
+  </header>
+
+  <div class="hero">
+    <div>
+      <p class="hero-eyebrow">Total submissions to date</p>
+      <h1 class="hero-num">73<span class="small-caret">+4 internal</span></h1>
+    </div>
+    <div>
+      <p class="hero-eyebrow">For Jessica</p>
+      <h2 class="hero-h1">Where the <em>sleep assessment</em> stands.</h2>
+      <p class="hero-lede">A look at who's filling out the form, where they're coming from, and how the funnel into a paid sleep test is converting.</p>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div>
+      <p class="stat-label">Last 30 days</p>
+      <p class="stat-value">23</p>
+      <p class="stat-aside">peak day 4 on Apr 30</p>
+    </div>
+    <div>
+      <p class="stat-label">Converted to a paid sleep test</p>
+      <p class="stat-value">4<span class="unit">people</span></p>
+      <p class="stat-aside">5.5% of public submissions</p>
+    </div>
+    <div>
+      <p class="stat-label">Revenue from converted</p>
+      <p class="stat-value">$540</p>
+      <p class="stat-aside">avg $135 per converted</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="section-head">
+      <span class="section-eyebrow">Trend</span>
+      <h2 class="section-h2">Submissions by day</h2>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart"><div class="bar" style="--h:50.0%" data-count="2" data-date="Apr 8"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 9"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 10"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 11"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 12"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 13"></div><div class="bar" style="--h:50.0%" data-count="2" data-date="Apr 14"></div><div class="bar" style="--h:50.0%" data-count="2" data-date="Apr 15"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 16"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 17"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 18"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 19"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 20"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 21"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 22"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 23"></div><div class="bar" style="--h:25.0%" data-count="1" data-date="Apr 24"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 25"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 26"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="Apr 27"></div><div class="bar" style="--h:50.0%" data-count="2" data-date="Apr 28"></div><div class="bar" style="--h:50.0%" data-count="2" data-date="Apr 29"></div><div class="bar peak" style="--h:100.0%" data-count="4" data-date="Apr 30"><span class=peak-label>4</span></div><div class="bar" style="--h:50.0%" data-count="2" data-date="May 1"></div><div class="bar" style="--h:75.0%" data-count="3" data-date="May 2"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="May 3"></div><div class="bar" style="--h:50.0%" data-count="2" data-date="May 4"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="May 5"></div><div class="bar" style="--h:25.0%" data-count="1" data-date="May 6"></div><div class="bar zero" style="--h:0.0%" data-count="0" data-date="May 7"></div></div>
+      <div class="chart-axis"><div class="tick tick-show">Apr 8</div><div class="tick"></div><div class="tick"></div><div class="tick"></div><div class="tick"></div><div class="tick tick-show">Apr 13</div><div class="tick"></div><div class="tick"></div><div class="tick"></div><div class="tick"></div><div class="tick tick-show">Apr 18</div><div class="tick"></div><div class="tick"></div><div class="tick"></div><div class="tick"></div><div class="tick tick-show">Apr 23</div><div class="tick"></div><div class="tick"></div><div class="tick"></div><div class="tick"></div><div class="tick tick-show">Apr 28</div><div class="tick"></div><div class="tick"></div><div class="tick"></div><div class="tick"></div><div class="tick tick-show">May 3</div><div class="tick"></div><div class="tick"></div><div class="tick"></div><div class="tick tick-show">May 7</div></div>
+    </div>
+    <p class="chart-caption">
+      <b>April 30</b> was the biggest day with 4 submissions.
+      The new native assessment form went live on May 6 — the recent uptick should sustain
+      now that UTM tracking is in place and conversions are properly attributed.
+    </p>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <span class="section-eyebrow">Sources</span>
+      <h2 class="section-h2">Where they came from</h2>
+    </div>
+    <div class="twocol">
+      <div>
+        <h3 class="col-h3">By referrer<span class="col-sub">how they reached the site</span></h3>
+        <ul class="hbars"><li class="hbar"><span class="hbar-label">Direct / no referrer</span><span class="hbar-track"><span class="hbar-fill" style="width:74.0%"></span></span><span class="hbar-num">57</span></li>
+<li class="hbar"><span class="hbar-label">Google</span><span class="hbar-track"><span class="hbar-fill" style="width:10.4%"></span></span><span class="hbar-num">8</span></li>
+<li class="hbar"><span class="hbar-label">theREALsleep (internal)</span><span class="hbar-track"><span class="hbar-fill" style="width:7.8%"></span></span><span class="hbar-num">6</span></li>
+<li class="hbar"><span class="hbar-label">Facebook</span><span class="hbar-track"><span class="hbar-fill" style="width:5.2%"></span></span><span class="hbar-num">4</span></li>
+<li class="hbar"><span class="hbar-label">Instagram</span><span class="hbar-track"><span class="hbar-fill" style="width:2.6%"></span></span><span class="hbar-num">2</span></li></ul>
+      </div>
+      <div>
+        <h3 class="col-h3">Top landing pages<span class="col-sub">where they entered</span></h3>
+        <ul class="hbars"><li class="hbar"><span class="hbar-label">No referrer captured</span><span class="hbar-track"><span class="hbar-fill" style="width:63.6%"></span></span><span class="hbar-num">49</span></li>
+<li class="hbar"><span class="hbar-label">Homepage</span><span class="hbar-track"><span class="hbar-fill" style="width:23.4%"></span></span><span class="hbar-num">18</span></li>
+<li class="hbar"><span class="hbar-label">/sleep-assessment</span><span class="hbar-track"><span class="hbar-fill" style="width:7.8%"></span></span><span class="hbar-num">6</span></li>
+<li class="hbar"><span class="hbar-label">/at-home-sleep-test</span><span class="hbar-track"><span class="hbar-fill" style="width:3.9%"></span></span><span class="hbar-num">3</span></li>
+<li class="hbar"><span class="hbar-label">/locations</span><span class="hbar-track"><span class="hbar-fill" style="width:1.3%"></span></span><span class="hbar-num">1</span></li></ul>
+      </div>
+    </div>
+    <p class="chart-caption" style="margin-top: 32px;">
+      <b>Of the 7 with attributable UTM data:</b>
+      6 from Facebook ads, 1 from your Google Business listing.
+      The <b>57 direct entries</b> are mostly older Zentake form submissions before tracking was set up.
+    </p>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <span class="section-eyebrow">Money</span>
+      <h2 class="section-h2">Who actually bought</h2>
+    </div>
+    <div class="converted-block">
+      <div class="converted-headline">
+        <span class="converted-num">4</span>
+        <span class="converted-rev">of 73 have a paid Stripe charge — <b>$540</b> in revenue</span>
+        <span class="converted-rate">5.5% conversion</span>
+      </div>
+      <ul class="conv-list">
+        <li class="conv-item"><span class="conv-date">Apr 24, 2026</span><span class="conv-name">greg tishkoff<span class="conv-email">gregtishkoff@gmail.com</span></span><span class="conv-amt">$160.00</span></li><li class="conv-item"><span class="conv-date">Apr 8, 2026</span><span class="conv-name">Jessica Senser<span class="conv-email">jessicasenser@gmail.com</span></span><span class="conv-amt">$160.00</span></li><li class="conv-item"><span class="conv-date">Apr 6, 2026</span><span class="conv-name">Jolene Tharp<span class="conv-email">jolenetharp85@gmail.com</span></span><span class="conv-amt">$60.00</span></li><li class="conv-item"><span class="conv-date">Mar 17, 2026</span><span class="conv-name">w.j.baker<span class="conv-email">w.j.baker@sbcglobal.net</span></span><span class="conv-amt">$160.00</span></li>
+      </ul>
+    </div>
+    <p class="caveat">
+      "Converted" means at least one successful Stripe charge on theREALsleep's account.
+      The shop's Buy button is still a placeholder, so charges are coming in through manual invoices and direct payment links — amounts will vary until the cart is live.
+    </p>
+  </section>
+
+  <details class="full-list">
+    <summary>The full list — all 77 submissions, newest first</summary>
+    <table class="subs">
+      <thead>
+        <tr>
+          <th class="date-col">Date</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Source</th>
+          <th class="conv-col">Paid</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr class="internal-row">
+          <td class="date-col">May 6, 2026</td>
+          <td class="name-col">Testing Pixel <span class="chip muted">internal</span></td>
+          <td class="email-col">Tewsfwfhwa@gmail.com</td>
+          <td class="src-col">Homepage</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">May 4, 2026</td>
+          <td class="name-col">Graziela Ramos </td>
+          <td class="email-col">ramosgraziela21@gmail.com</td>
+          <td class="src-col">Homepage</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">May 4, 2026</td>
+          <td class="name-col">Jennifer George </td>
+          <td class="email-col">jennyandthepets@gmail.con</td>
+          <td class="src-col">/at-home-sleep-test</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">May 2, 2026</td>
+          <td class="name-col">Jeanell Fenner </td>
+          <td class="email-col">fennerjeanell@gmail.com</td>
+          <td class="src-col">Facebook</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">May 2, 2026</td>
+          <td class="name-col">Jared Alquist </td>
+          <td class="email-col">jalquist07@gmail.com</td>
+          <td class="src-col">/sleep-assessment</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">May 2, 2026</td>
+          <td class="name-col">Lynae Harris </td>
+          <td class="email-col">lynae.harris91@gmail.com</td>
+          <td class="src-col">Facebook</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">May 1, 2026</td>
+          <td class="name-col">Cassandra Lemasters </td>
+          <td class="email-col">cassiebug04@gmail.com</td>
+          <td class="src-col">/sleep-assessment</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">May 1, 2026</td>
+          <td class="name-col">Nathan Hampton </td>
+          <td class="email-col">hensel0501@gmail.com</td>
+          <td class="src-col">Homepage</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 30, 2026</td>
+          <td class="name-col">Lisa Staten </td>
+          <td class="email-col">lisastaten4@gmail.com</td>
+          <td class="src-col">Facebook</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 30, 2026</td>
+          <td class="name-col">John W.Smith </td>
+          <td class="email-col">smithjohnw31@gmail.com</td>
+          <td class="src-col">Facebook</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 30, 2026</td>
+          <td class="name-col">Allison Schardan </td>
+          <td class="email-col">schardan67@gmail.com</td>
+          <td class="src-col">/sleep-assessment</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 30, 2026</td>
+          <td class="name-col">Sara Price </td>
+          <td class="email-col">sprice84@gmail.com</td>
+          <td class="src-col">/sleep-assessment</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 29, 2026</td>
+          <td class="name-col">Psajha-Alliniece Walters </td>
+          <td class="email-col">redappleb20@gmail.com</td>
+          <td class="src-col">Facebook</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 29, 2026</td>
+          <td class="name-col">Denise Bailey </td>
+          <td class="email-col">dmommab7@yahoo.com</td>
+          <td class="src-col">/sleep-assessment</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 28, 2026</td>
+          <td class="name-col">Daniel Diamond </td>
+          <td class="email-col">ddiamond89@gmail.com</td>
+          <td class="src-col">Homepage</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr class="internal-row">
+          <td class="date-col">Apr 28, 2026</td>
+          <td class="name-col">Patrick Fien <span class="chip muted">internal</span></td>
+          <td class="email-col">pat@test.com</td>
+          <td class="src-col">Homepage</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 24, 2026</td>
+          <td class="name-col">greg tishkoff </td>
+          <td class="email-col">gregtishkoff@gmail.com</td>
+          <td class="src-col">Homepage</td>
+          <td class="conv-col"><span class="chip">$160.00</span></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 15, 2026</td>
+          <td class="name-col">Allison Wolfe </td>
+          <td class="email-col">amw97@aol.com</td>
+          <td class="src-col">/sleep-assessment</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 15, 2026</td>
+          <td class="name-col">Vanessa Davis </td>
+          <td class="email-col">nessad19@gmail.com</td>
+          <td class="src-col">/locations</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 14, 2026</td>
+          <td class="name-col">Meghan Doyle </td>
+          <td class="email-col">meghanld@outloo.com</td>
+          <td class="src-col">Homepage</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 14, 2026</td>
+          <td class="name-col">SHANNON Punt </td>
+          <td class="email-col">Shannonpunt@yahoo.com</td>
+          <td class="src-col">Homepage</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 8, 2026</td>
+          <td class="name-col">cindy wolt </td>
+          <td class="email-col">cindywolt@gmail.com</td>
+          <td class="src-col">Homepage</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 8, 2026</td>
+          <td class="name-col">Jessica Senser </td>
+          <td class="email-col">jessicasenser@gmail.com</td>
+          <td class="src-col">Homepage</td>
+          <td class="conv-col"><span class="chip">$160.00</span></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 6, 2026</td>
+          <td class="name-col">Jolene Tharp </td>
+          <td class="email-col">jolenetharp85@gmail.com</td>
+          <td class="src-col">Homepage</td>
+          <td class="conv-col"><span class="chip">$60.00</span></td>
+        </tr>
+        <tr>
+          <td class="date-col">Apr 5, 2026</td>
+          <td class="name-col">Brian Kukla </td>
+          <td class="email-col">bkukla1102@gmail.com</td>
+          <td class="src-col">GMBListing</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Joann Hopkins </td>
+          <td class="email-col">joanhopkins76@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Teresa Weidenbusch </td>
+          <td class="email-col">Tweiden4@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Kyle Holcomb </td>
+          <td class="email-col">Kyleholcomb_29@icloud.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Carlton Reaves </td>
+          <td class="email-col">crmedic2014@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Jodie Van Hoose </td>
+          <td class="email-col">Jodie.vanhoose@yahoo.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Cindy Rangel </td>
+          <td class="email-col">cindy.rangel@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Bailey Cox </td>
+          <td class="email-col">Bailey.cox7@yahoo.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Erik Keskes </td>
+          <td class="email-col">ekeskes82@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Arthur Simpkins </td>
+          <td class="email-col">aesimpk@yahoo.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Logan Pfeffer </td>
+          <td class="email-col">Pfeffer.19@icloud.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Michael Young </td>
+          <td class="email-col">myoung5417@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Melissa Tate </td>
+          <td class="email-col">melissadetoriotate@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">April Hale </td>
+          <td class="email-col">Dentalapril@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Kerry Jones </td>
+          <td class="email-col">Ledalejones@yahoo.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Phyllis Locke </td>
+          <td class="email-col">phyllis.locke@aol.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Feyza Ahmed </td>
+          <td class="email-col">Eyza.ahmed@yahoo.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Kaeley Grodzicki </td>
+          <td class="email-col">kaygrodzicki@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">David Lacki </td>
+          <td class="email-col">dlacki07@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Amber Terry </td>
+          <td class="email-col">pileagold@icloud.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Maggie Swanson </td>
+          <td class="email-col">M.hersch0716@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Diana Stewart </td>
+          <td class="email-col">dianastewart51@rocketmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Mark Toskin </td>
+          <td class="email-col">mjtoskin@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Elizabeth Chilton </td>
+          <td class="email-col">ecc2014@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">John Muller </td>
+          <td class="email-col">Jwayne2525@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 26, 2026</td>
+          <td class="name-col">Kate Everett </td>
+          <td class="email-col">kate.everett14@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 17, 2026</td>
+          <td class="name-col">w.j.baker </td>
+          <td class="email-col">w.j.baker@sbcglobal.net</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"><span class="chip">$160.00</span></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 12, 2026</td>
+          <td class="name-col">Nicholas Paraskevas </td>
+          <td class="email-col">nparaskevas90@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Mar 12, 2026</td>
+          <td class="name-col">David Lacki </td>
+          <td class="email-col">david_lacki@keybank.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr class="internal-row">
+          <td class="date-col">Mar 8, 2026</td>
+          <td class="name-col">Will Arnett <span class="chip muted">internal</span></td>
+          <td class="email-col">will@digitalwillads.com</td>
+          <td class="src-col">Homepage</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr class="internal-row">
+          <td class="date-col">Mar 8, 2026</td>
+          <td class="name-col">setup <span class="chip muted">internal</span></td>
+          <td class="email-col">setup@digitalwillads.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">knowlestnn </td>
+          <td class="email-col">knowlestnn@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">Matthew Lisi </td>
+          <td class="email-col">marlieandme2019@yahoo.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">Thomas Klein </td>
+          <td class="email-col">tommyklein2@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">chadk85 </td>
+          <td class="email-col">chadk85@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">JULLETTE SAMUELS </td>
+          <td class="email-col">cjsouthers@msn.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">toribush10 </td>
+          <td class="email-col">toribush10@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">mp1032234 </td>
+          <td class="email-col">mp1032234@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">ksnightmoves2 </td>
+          <td class="email-col">ksnightmoves2@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">Yasmin Ellahi </td>
+          <td class="email-col">Yasminellahi@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">sprattfarmstracy </td>
+          <td class="email-col">sprattfarmstracy@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">Heather Brooks </td>
+          <td class="email-col">studio248orders@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">Mbrown031528 </td>
+          <td class="email-col">Mbrown031528@aol.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">aweyrick33 </td>
+          <td class="email-col">aweyrick33@yahoo.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">jefferoo </td>
+          <td class="email-col">jefferoo@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">cstewa11 </td>
+          <td class="email-col">cstewa11@columbus.rr.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">angela constable </td>
+          <td class="email-col">aconstable22@gmail.com</td>
+          <td class="src-col">Facebook</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">Naftali Rosenthal </td>
+          <td class="email-col">naftali.rosenthal@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">maraarenson </td>
+          <td class="email-col">maraarenson@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">michaelwinters391 </td>
+          <td class="email-col">michaelwinters391@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">Robert Lute </td>
+          <td class="email-col">rlute94@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">libby rosenthal </td>
+          <td class="email-col">libby.weprin@gmail.com</td>
+          <td class="src-col">Homepage</td>
+          <td class="conv-col"></td>
+        </tr>
+        <tr>
+          <td class="date-col">Feb 27, 2026</td>
+          <td class="name-col">jesseschbeck </td>
+          <td class="email-col">jesseschbeck@gmail.com</td>
+          <td class="src-col">—</td>
+          <td class="conv-col"></td>
+        </tr>
+      </tbody>
+    </table>
+  </details>
+
+  <footer class="report-foot">
+    <p><strong>How this is counted.</strong> Daily totals use the Drip subscriber <code>created_at</code> timestamp as a proxy for assessment-submission time. The list mixes submissions from the legacy Zentake form and the new native form (live since May 6). UTM data is best-effort — extracted from the landing URL querystring where present.</p>
+    <p><strong>About the +4 internal entries.</strong> These are test submissions from the digitalwillads.com team and are excluded from the headline 73 number, but kept visible in the full list for transparency.</p>
+    <div class="signoff">— Will, theREALsleep</div>
+  </footer>
+
+</div>
+
+</body>
+</html>
